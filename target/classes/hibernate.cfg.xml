@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-5.3.dtd">
+<hibernate-configuration xmlns="http://www.hibernate.org/xsd/orm/cfg">
+    <session-factory>
+        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
+        <property name="connection.url">jdbc:mysql://127.0.0.1:3307/atm_interface</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password"></property>
+        <property name="show_sql">true</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+
+        <mapping class="org.example.model.UserEntity"></mapping>
+        <mapping class="org.example.model.DepositTransactionEntity"></mapping>
+        <mapping class="org.example.model.WithdrawTransactionEntity"></mapping>
+
+    </session-factory>
+</hibernate-configuration>
