@@ -9,7 +9,6 @@
         <property name="connection.url">jdbc:mysql://127.0.0.1:3307/atm_interface</property>
         <property name="connection.username">root</property>
         <property name="connection.password"></property>
-        <property name="show_sql">true</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 
         <mapping class="org.example.model.UserEntity"></mapping>

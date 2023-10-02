@@ -49,35 +49,45 @@ public class AtmApp {
                 String scannerId = scanner.next();
                 System.out.println("Write your password: ");
                 String scannerPassword = scanner.next();
-                tryToLogIn(scannerId, scannerPassword);
 
-                printStream.println("d - Deposit");
-                printStream.println("w - Withdraw");
-                printStream.println("b - Balance Account");
-                printStream.println("h - History of transactions");
-                printStream.println("e - Exit");
+                boolean login = tryToLogIn(scannerId, scannerPassword);
 
-                loggedOperation = scanner.next();
+                if (!login) {
+                    continue;
+                }
 
-                switch (loggedOperation) { // jak zrobić, aby nie wychodzić z tego dopoki nacisne E
-                    case "d":
-                        tryToDeposit(sessionFactory);
-                        break;
-                    case "w":
-                        tryToWithdraw(sessionFactory);
-                        break;
-                    case "b":
-                        tryToShowBalance(sessionFactory);
-                        break;
-                    case "h":
-                        tryToListHistoryOfTransactions(sessionFactory);
-                        break;
-                    case "e":
-                        break;
-                    default:
-                        printStream.println("Wrong operation! Try again!");
-                        break;
+                boolean loggedOut = false;
 
+                while (!loggedOut) {
+                    printStream.println("d - Deposit");
+                    printStream.println("w - Withdraw");
+                    printStream.println("b - Balance Account");
+                    printStream.println("h - History of transactions");
+                    printStream.println("e - Exit");
+
+                    loggedOperation = scanner.next();
+
+                    switch (loggedOperation) {
+                        case "d":
+                            tryToDeposit(sessionFactory);
+                            break;
+                        case "w":
+                            tryToWithdraw(sessionFactory);
+                            break;
+                        case "b":
+                            tryToShowBalance(sessionFactory);
+                            break;
+                        case "h":
+                            tryToListHistoryOfTransactions(sessionFactory);
+                            break;
+                        case "e":
+                            loggedOut = true;
+                            break;
+                        default:
+                            printStream.println("Wrong operation! Try again!");
+                            break;
+
+                    }
                 }
 
             }
@@ -123,8 +133,11 @@ public class AtmApp {
                 preparedStatement.close();
                 connection.close();
 
-                printStream.println("You are logged in!" + "\n" + "Choose which operations do you need");
-
+                if (!passwordsMatch) {
+                    printStream.println("You provided wrong data!");
+                } else {
+                    printStream.println("You are logged in!" + "\n" + "Choose which operations do you need");
+                }
                 return passwordsMatch;
             } else {
 
@@ -196,7 +209,7 @@ public class AtmApp {
 
     }
 
-    private void tryToListHistoryOfTransactions(SessionFactory sessionFactory) { // dokonczyc, czy join?
+    private void tryToListHistoryOfTransactions(SessionFactory sessionFactory) {
         Session session = sessionFactory.openSession();
 
         try {
@@ -207,6 +220,14 @@ public class AtmApp {
             String hqlWithdraw = "SELECT deposit FROM DepositTransactionEntity";
             Query<BigDecimal> queryWithdraw = session.createQuery(hqlWithdraw, BigDecimal.class);
             List<BigDecimal> listWithdraw = queryWithdraw.list();
+
+            for (BigDecimal depositsHistory : listDeposit) {
+                printStream.println("+" + depositsHistory);
+            }
+
+            for (BigDecimal withdrawHistory : listWithdraw) {
+                printStream.println("-" + withdrawHistory);
+            }
 
 
         } catch (Exception e) {
